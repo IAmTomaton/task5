@@ -1,0 +1,9 @@
+Hello
+This is a test message.
+..
+..
+...
+....
+QUIT
+DATA
+Вах какой Русский текст!
