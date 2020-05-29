@@ -1,6 +1,6 @@
-from ваша почта mail.ru
-password ваш пароль
-to mrhomka.com@gmail.com
+from отправитель@mail.ru
+password пароль
+to получатель@gmail.com
 text msg.txt
 attach attachments/icon.png
 attachments/тхт.txt
