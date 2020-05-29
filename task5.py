@@ -70,14 +70,13 @@ class Mail:
 			msg += data + '\n'
 		msg += '--' + boundary + '--' + '\n'
 		msg += '.' + '\n'
-		print(msg)
 		return msg
 
 	def send(self):
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
 			client.connect((host_addr, port))
 			client = ssl.wrap_socket(client)
-			print(client.recv(1024))
+			client.recv(1024)
 			user_name = self.user_mail.split('@')[0]
 			request(client, 'EHLO ' + user_name)
 			base64login = base(user_name)
@@ -92,14 +91,35 @@ class Mail:
 			request(client, self.create_msg())
 
 
-def request(socket, request, log=True):
+def log(recv):
+	if int(recv[:3]) >= 500:
+		print(recv)
+
+
+def request(socket, request, print_log=True):
 	socket.send((request + '\n').encode())
 	recv = socket.recv(65535).decode()
-	if log: print(recv)
+	if print_log: log(recv)
 	return recv
 
 
 def screen_msg(msg):
+	start = -1
+	stop = -1
+	i = 0
+	while i < len(msg):
+		if msg[i] == '.' and start == -1:
+			start = i
+		if start != -1 and msg[i] != '.':
+			stop = i - 1;
+		if stop != -1:
+			prestart = start == 0 or msg[start - 1] == '\n'
+			poststop = stop == len(msg) - 1 or msg[stop + 1] == '\n'
+			if prestart and poststop:
+				msg = msg[:start] + '.' + msg[start:]
+			start = -1
+			stop = -1
+		i += 1
 	return msg
 
 
